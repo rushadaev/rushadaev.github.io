@@ -1,0 +1,169 @@
+
+	<div id="originalchart" style="background: #302825; padding: 20px; width:1700px">
+	  <canvas style="display:none;" id="myChart"></canvas>
+	  
+	</div>
+	<div style="background: #302825;">
+		<img style="width: 100%" id="url" />
+	</div>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0/dist/chart.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+	<script>
+	  const labels = [
+		'Эмоциональная депривация /',
+		'Покинутость / Нестабильность',
+		'Недоверие / Насилие',
+		'Социальная изоляция / Отчуждение',
+		'Дефективность / Стыд',
+		'Неуспешность / Обреченность на неудачу',
+		'Зависимость / Некомпетентность',
+		'Уязвимость /',
+		'Слитность с другими / Неразвитое Я',
+		'Покорность / Подчинение',
+		'Самопожертвование /',
+		'Подавление эмоций /',
+		'Жёсткие стандарты / Завышенные требования к себе',
+		'Привилегированность / Грандиозность',
+		'Недостаток самоконтроля / Самодисциплины',
+		'Поиск одобрения /',
+		'Негативизм / Пессимизм',
+		'Пунитивность / Карательность',
+	  ];
+	let colors = [
+		"#cc0091",
+		"#00d100",
+		"#b97cff",
+		"#76830d",
+		"#0065df",
+		"#ffc65e",
+		"#1f156d",
+		"#6b6400",
+		"#004daf",
+		"#710000",
+		"#00b3ff",
+		"#600026",
+		"#00aed6",
+		"#331500",
+		"#ffabff",
+		"#57474f",
+		"#dde6ff",
+		"#003986"
+	];
+	  const data = {
+		labels: labels,
+		datasets: [{
+		  label: 'Значение',
+		  backgroundColor: '#221C18',
+		  borderColor: '#D3C196',
+		  data: [25, 25, 27, 12, 20, 24, 25, 10, 27, 12, 20, 24, 12, 20, 24, 12, 20, 24],
+		  fill: true,
+		  pointBackgroundColor: function(context) {
+			  var index = context.dataIndex;
+			  var value = context.dataset.data[index];
+			  return colors[index];
+		  },
+		  tension: 0.3,
+		  pointStyle: 'circle',
+		  radius: 7,
+		  hoverRadius: 7,
+		}]
+	  };
+	  
+	  function done(){
+		var url=myChart.toBase64Image();
+		document.getElementById("url").src=url;
+		document.getElementById("originalchart").style.display = "none";
+	  }
+	  
+	  const config = {
+		type: 'line',
+		data: data,
+		
+		options: {
+			animation: {
+				onComplete: done
+			  },
+			layout: {
+				padding: {
+					left: 150,
+					right: 150,
+					top: 150,
+					bottom: 50
+				}
+			},
+			hover: {
+			  mode: 'nearest',
+			  intersect: true
+			},
+			plugins: {
+				legend: {
+					text: 'Данные',
+					display: false,
+				},
+				tooltip: {
+					enabled: true,
+				},
+				datalabels: {
+					
+					clamp: true,
+					align: -45,
+					color: '#ffffff',
+					backgroundColor: '#221C18',
+					borderColor: '#948768',
+					borderWidth: 1,
+					borderRadius: 10,
+					rotation: -60,
+					formatter: function(value, context) {
+					  return context.chart.data.labels[context.dataIndex].split(' /')[0] + ' (' + value + ')';
+					}
+				  }
+			},
+			scales: {
+				y: {
+					min: 0,
+					weight: 10,
+					grid: {
+						borderColor: '#D3C196',
+						tickColor: '#D3C196',
+						offset: true,
+						color: '#D3C196',
+						borderDash: [10, 7]
+					},
+					ticks: {
+						color: '#ffffff'
+					}
+				},
+				x: {
+					grid: {
+						borderColor: '#D3C196',
+						drawOnChartArea: false,
+						tickColor: '#D3C196',
+						color: '#D3C196'
+					},
+					ticks: {
+						color: '#ffffff',
+						callback: function(value, index, ticks) {
+							var t = labels[index].replaceAll(' /').split (' ');
+							if(t.length > 1)
+							{
+								var shortFIO = t [0][0] + ' ' + t [1][0];
+							}
+							else{
+								var shortFIO = t [0][0]
+							}
+							
+							return shortFIO;
+						}
+					}
+				}
+			}
+		},
+		plugins: [ChartDataLabels],
+	  };
+	</script>
+	<script>
+	  const myChart = new Chart(
+		document.getElementById('myChart').getContext("2d"),
+		config
+	  );
+	</script>
