@@ -783,7 +783,18 @@
 									borderRadius: 10,
 									rotation: -60,
 									formatter: function(value, context) {
-									  return context.chart.data.labels[context.dataIndex].split(' /')[0] + ' (' + value + ')';
+										let labelValue = context.chart.data.labels[context.dataIndex].split(' /')[0];
+										let splittedLabel = labelValue.split(' ');
+										if(splittedLabel.length === 1){
+											labelValue = splittedLabel[0];
+										}
+										if(splittedLabel.length === 2){
+											labelValue = splittedLabel[0].substring(0, 5) + '. ' + splittedLabel[1].substring(0, 5) + '.'
+										}
+										if(splittedLabel.length === 3){
+											labelValue = splittedLabel[0].substring(0, 5) + '. ' + splittedLabel[1] + ' ' + splittedLabel[2].substring(0, 5) + '.'
+										}
+									  return labelValue + ' (' + value + ')';
 									},
 									font: {
 										size: 16,
